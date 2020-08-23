@@ -8,38 +8,40 @@ Parameters:
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
 Resources:
+
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub 'Internal Security group for ${AWS::StackName}'
       SecurityGroupIngress:
         - IpProtocol: tcp
-        - FromPort: 8080
-        - ToPort: 8080
-        - CidrIp: 0.0.0.0/0
-        - FromPort: 22
-        - ToPort: 22
-        - CidrIp: 0.0.0.0/0
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
-        - Value: !Ref AWS::StackName
+          Value: !Ref AWS::StackName
 
   InstanceRole:
     Type: "AWS::IAM::Role"
     Properties:
       AssumeRolePolicyDocument:
-        - Version: "2012-10-17"
-        - Statement:
-          - Effect: Allow
-          - Principal:
-            - Service:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service:
               - "ec2.amazonaws.com"
           - Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/CloudWatchFullAccess
       Tags:
         - Key: Name
-        - Value: !Ref AWS::StackName
+          Value: !Ref AWS::StackName
 
   InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
@@ -111,7 +113,7 @@ Resources:
           ${AWS::Region} --resource Instance
       Tags:
         - Key: Name
-        - Value: !Ref AWS::StackName
+          Value: !Ref AWS::StackName
 
 Outputs:
   InstanceEndpoint:
